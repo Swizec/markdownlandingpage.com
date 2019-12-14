@@ -16,7 +16,7 @@ const schema = gql`
 const resolvers = {
     Query: {
         hello: () => ({
-            world: "Hello workshop peeps"
+            world: "Hello this is live data"
         })
     }
 }

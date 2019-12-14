@@ -119,7 +119,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/markdownlandingpage/dev/1576363984652-2019-12-14T22:53:04.652Z/markdownlandingpage.zip"
+                "S3Key": "serverless/markdownlandingpage/dev/1576365307141-2019-12-14T23:15:07.141Z/markdownlandingpage.zip"
               },
               "FunctionName": "markdownlandingpage-dev-graphql",
               "Handler": "dist/graphql.handler",
@@ -138,14 +138,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "GraphqlLambdaVersioncmCjN1MJKgwfKrFt0h5X0XWfUdNA6E0pYqhlzai9Wg": {
+          "GraphqlLambdaVersionJmQKZBE1pis5PadJBZYwLoVgO8xSB6ZcloG9QO4eM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GraphqlLambdaFunction"
               },
-              "CodeSha256": "APkMi8HYbWPmAMc6oNw+VXDVVi/T00cDbQUPN7oQNAw="
+              "CodeSha256": "JWIb9I0/RanYp/lMbcztvSnd3/AZ8y7gZ/VqMZXtb24="
             }
           },
           "ApiGatewayRestApi": {
@@ -307,7 +307,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1576363960654": {
+          "ApiGatewayDeployment1576365286089": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -368,7 +368,7 @@
           "GraphqlLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GraphqlLambdaVersioncmCjN1MJKgwfKrFt0h5X0XWfUdNA6E0pYqhlzai9Wg"
+              "Ref": "GraphqlLambdaVersionJmQKZBE1pis5PadJBZYwLoVgO8xSB6ZcloG9QO4eM"
             }
           },
           "ServiceEndpoint": {
@@ -496,7 +496,7 @@
     "artifact": "/Users/Swizec/Documents/random-coding/markdownlandingpage.com/server/.serverless/markdownlandingpage.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/markdownlandingpage/dev/1576363984652-2019-12-14T22:53:04.652Z",
+    "artifactDirectoryName": "serverless/markdownlandingpage/dev/1576365307141-2019-12-14T23:15:07.141Z",
     "artifact": "markdownlandingpage.zip"
   }
 }

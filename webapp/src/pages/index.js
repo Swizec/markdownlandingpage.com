@@ -5,10 +5,12 @@ import Layout from "../components/layout"
 import Image from "../components/image"
 import SEO from "../components/seo"
 
+import { Heading } from 'rebass'
+
 const IndexPage = () => (
   <Layout>
-    <SEO title="Home" />
-    <h1>Hello livestream</h1>
+    <SEO title="Markdown Landing Page" />
+    <Heading color="highlight">Markdown Landing Page</Heading>
     <p>Welcome to your new Gatsby site.</p>
     <p>Now go build something great.</p>
     <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>

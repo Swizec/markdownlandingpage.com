@@ -1,5 +1,8 @@
-import { future } from '@theme-ui/presets'
+import {
+    future
+} from '@theme-ui/presets'
 
 export default {
-    ...future
+    ...future,
+
 }

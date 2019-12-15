@@ -9,6 +9,23 @@
       "variableSyntax": "\\${([ ~:a-zA-Z0-9._@'\",\\-\\/\\(\\)*]+?)}",
       "name": "aws",
       "runtime": "nodejs12.x",
+      "environment": {
+        "USER_TABLE": "markdownlandingpage-users-dev"
+      },
+      "iamRoleStatements": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:UpdateItem",
+            "dynamodb:DeleteItem"
+          ],
+          "Resource": "arn:aws:dynamodb:us-east-1:*:table/markdownlandingpage-users-dev"
+        }
+      ],
       "region": "us-east-1",
       "versionFunctions": true,
       "remoteFunctionData": null,
@@ -91,6 +108,9 @@
                             "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/markdownlandingpage-dev*:*:*"
                           }
                         ]
+                      },
+                      {
+                        "$ref": "$[\"service\"][\"provider\"][\"iamRoleStatements\"][0]"
                       }
                     ]
                   }
@@ -119,7 +139,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/markdownlandingpage/dev/1576365307141-2019-12-14T23:15:07.141Z/markdownlandingpage.zip"
+                "S3Key": "serverless/markdownlandingpage/dev/1576451050044-2019-12-15T23:04:10.044Z/markdownlandingpage.zip"
               },
               "FunctionName": "markdownlandingpage-dev-graphql",
               "Handler": "dist/graphql.handler",
@@ -131,21 +151,26 @@
                 ]
               },
               "Runtime": "nodejs12.x",
-              "Timeout": 6
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "USER_TABLE": "markdownlandingpage-users-dev"
+                }
+              }
             },
             "DependsOn": [
               "GraphqlLogGroup",
               "IamRoleLambdaExecution"
             ]
           },
-          "GraphqlLambdaVersionJmQKZBE1pis5PadJBZYwLoVgO8xSB6ZcloG9QO4eM": {
+          "GraphqlLambdaVersionNNEX20GzJYLZjxxnARUp0Sj3aZfQLa53YgRqnPi5aw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GraphqlLambdaFunction"
               },
-              "CodeSha256": "JWIb9I0/RanYp/lMbcztvSnd3/AZ8y7gZ/VqMZXtb24="
+              "CodeSha256": "Ww1UQ9QHbF/AWBwa9cCV9KmBr+QfZSdJIVIpUrUsEJY="
             }
           },
           "ApiGatewayRestApi": {
@@ -307,7 +332,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1576365286089": {
+          "ApiGatewayDeployment1576451019288": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -357,6 +382,28 @@
                 ]
               }
             }
+          },
+          "UsersTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "userId",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "userId",
+                  "KeyType": "HASH"
+                }
+              ],
+              "ProvisionedThroughput": {
+                "ReadCapacityUnits": 1,
+                "WriteCapacityUnits": 1
+              },
+              "TableName": "markdownlandingpage-users-dev"
+            }
           }
         },
         "Outputs": {
@@ -368,7 +415,7 @@
           "GraphqlLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GraphqlLambdaVersionJmQKZBE1pis5PadJBZYwLoVgO8xSB6ZcloG9QO4eM"
+              "Ref": "GraphqlLambdaVersionNNEX20GzJYLZjxxnARUp0Sj3aZfQLa53YgRqnPi5aw"
             }
           },
           "ServiceEndpoint": {
@@ -491,12 +538,39 @@
         "vpc": {}
       }
     },
+    "resources": {
+      "Resources": {
+        "UsersTable": {
+          "Type": "AWS::DynamoDB::Table",
+          "Properties": {
+            "AttributeDefinitions": [
+              {
+                "AttributeName": "userId",
+                "AttributeType": "S"
+              }
+            ],
+            "KeySchema": [
+              {
+                "AttributeName": "userId",
+                "KeyType": "HASH"
+              }
+            ],
+            "ProvisionedThroughput": {
+              "ReadCapacityUnits": 1,
+              "WriteCapacityUnits": 1
+            },
+            "TableName": "markdownlandingpage-users-dev"
+          }
+        }
+      },
+      "Outputs": {}
+    },
     "serviceFilename": "serverless.yml",
     "layers": {},
     "artifact": "/Users/Swizec/Documents/random-coding/markdownlandingpage.com/server/.serverless/markdownlandingpage.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/markdownlandingpage/dev/1576365307141-2019-12-14T23:15:07.141Z",
+    "artifactDirectoryName": "serverless/markdownlandingpage/dev/1576451050044-2019-12-15T23:04:10.044Z",
     "artifact": "markdownlandingpage.zip"
   }
 }

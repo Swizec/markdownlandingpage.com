@@ -4,6 +4,18 @@ provider:
     name: aws
     runtime: nodejs12.x
     stage: dev
+    environment:
+        USER_TABLE: ${self:service}-users-${self:provider.stage}
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:Query
+              - dynamodb:Scan
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+          Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.USER_TABLE}"
 
 functions:
     graphql:
@@ -17,3 +29,19 @@ functions:
                   path: graphql
                   method: POST
                   cors: true
+
+resources:
+    Resources:
+        UsersTable:
+            Type: "AWS::DynamoDB::Table"
+            Properties:
+                AttributeDefinitions:
+                    - AttributeName: userId
+                      AttributeType: S
+                KeySchema:
+                    - AttributeName: userId
+                      KeyType: HASH
+                ProvisionedThroughput:
+                    ReadCapacityUnits: 1
+                    WriteCapacityUnits: 1
+                TableName: ${self:provider.environment.USER_TABLE}

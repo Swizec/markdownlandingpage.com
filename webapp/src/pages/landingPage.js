@@ -4,7 +4,7 @@ import Layout from "../components/layout"
 // import Image from "../components/image"
 import SEO from "../components/seo"
 import { useAuth } from "react-use-auth"
-import { Heading, Flex, Box, Button } from "rebass"
+import { Heading, Flex, Box, Button, Text } from "rebass"
 import { Textarea } from "@rebass/forms"
 import { useQuery, useMutation } from "react-apollo-hooks"
 import gql from "graphql-tag"
@@ -28,8 +28,8 @@ function useContentFromServer({ userId, pageId, pageContent, setPageContent }) {
   // TODO: handle errors
   const [savePage] = useMutation(
     gql`
-      query savePage($userId: String, $pageId: String, $content: String) {
-        page(userId: $userId, pageId: $pageId, content: $content) {
+      mutation savePage($userId: String, $pageId: String, $content: String) {
+        savePage(userId: $userId, pageId: $pageId, content: $content) {
           content
           lastUpdatedAt
         }
@@ -86,6 +86,9 @@ const LandingPage = ({ pageContext }) => {
               <Button variant="primary" onClick={savePage}>
                 Save
               </Button>
+              <Text fontSize={2}>
+                Just share this URL with anyone, they only see the final page
+              </Text>
             </Box>
             <Box width={1 / 2}>{renderedPage}</Box>
           </Flex>

@@ -89,6 +89,8 @@ export const createPage = async (_: any, params: CreatePageParams) => {
 };
 
 export const savePage = async (_: any, params: SavePageParams) => {
+    console.log(params);
+
     const result = await updateItem({
         TableName: process.env.PAGE_TABLE!,
         Key: {

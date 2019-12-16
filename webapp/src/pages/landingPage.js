@@ -1,19 +1,18 @@
-import React from "react"
-// import { useStaticQuery, graphql, Link } from "gatsby"
+import React, { useState, useEffect } from "react"
 
 import Layout from "../components/layout"
 // import Image from "../components/image"
 import SEO from "../components/seo"
 import { useAuth } from "react-use-auth"
-import { Heading } from "rebass"
+import { Heading, Flex, Box } from "rebass"
+import { Textarea } from "@rebass/forms"
 import { useQuery } from "react-apollo-hooks"
 import gql from "graphql-tag"
 
-const LandingPage = ({ pageContext }) => {
-  const { pageName, pageId, userId } = pageContext
-  //   const { isAuthenticated, user, login } = useAuth()
+import useRemark from "../useRemark"
 
-  const { loading, data } = useQuery(
+function useContentFromServer({ userId, pageId, setPageContent }) {
+  const { data } = useQuery(
     gql`
       query page($userId: String, $pageId: String) {
         page(userId: $userId, pageId: $pageId) {
@@ -25,14 +24,35 @@ const LandingPage = ({ pageContext }) => {
     `,
     { variables: { userId, pageId } }
   )
+  useEffect(() => {
+    setPageContent(data.page.content)
+  }, [data])
+}
 
-  const content = data ? data.page.content : pageContext.content
+const LandingPage = ({ pageContext }) => {
+  const { pageName, pageId, userId } = pageContext
+
+  // initiate state with compile-time data
+  const [pageContent, setPageContent] = useState(pageContext.content)
+  // fetch fresh state from server on component mount
+  useContentFromServer({ userId, pageId, setPageContent })
+
+  const renderedPage = useRemark(pageContent)
 
   return (
     <Layout>
       <SEO title={pageName} />
       <Heading fontSize={[5, 6, 7]}>{pageName}</Heading>
-      {content}
+
+      <Flex>
+        <Box width={1 / 2}>
+          <Textarea
+            value={pageContent}
+            onChange={ev => setPageContent(ev.target.value)}
+          />
+        </Box>
+        <Box width={1 / 2}>{renderedPage}</Box>
+      </Flex>
     </Layout>
   )
 }

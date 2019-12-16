@@ -31,6 +31,8 @@
     "react-helmet": "^5.2.1",
     "react-use-auth": "^0.5.3",
     "rebass": "^4.0.7",
+    "remark": "^11.0.2",
+    "remark-react": "^6.0.0",
     "theme-ui": "^0.2.49"
   },
   "devDependencies": {

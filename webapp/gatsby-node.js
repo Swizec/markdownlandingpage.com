@@ -12,6 +12,7 @@ exports.createPages = async ({ graphql, actions }) => {
     query {
       mdlapi {
         allPages {
+          userId
           pageId
           pageName
           content
@@ -21,20 +22,23 @@ exports.createPages = async ({ graphql, actions }) => {
   `)
 
   // iterate through result, create Gatsby pages
-  result.data.mdlapi.allPages.forEach(({ pageId, pageName, content }) => {
-    const landingPagePath = path.resolve("./src/pages/landingPage.js")
+  result.data.mdlapi.allPages.forEach(
+    ({ pageId, userId, pageName, content }) => {
+      const landingPagePath = path.resolve("./src/pages/landingPage.js")
 
-    // creates single page at url
-    actions.createPage({
-      path: `/${pageId}`,
-      component: landingPagePath,
-      context: {
-        pageId,
-        pageName,
-        content,
-      },
-    })
-  })
+      // creates single page at url
+      actions.createPage({
+        path: `/${pageId}`,
+        component: landingPagePath,
+        context: {
+          userId,
+          pageId,
+          pageName,
+          content,
+        },
+      })
+    }
+  )
 
   return true
 }

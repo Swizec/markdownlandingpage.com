@@ -6,17 +6,33 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { useAuth } from "react-use-auth"
 import { Heading } from "rebass"
+import { useQuery } from "react-apollo-hooks"
+import gql from "graphql-tag"
 
 const LandingPage = ({ pageContext }) => {
-  const { isAuthenticated, user, login } = useAuth()
+  const { pageName, pageId, userId } = pageContext
+  //   const { isAuthenticated, user, login } = useAuth()
 
-  console.log(pageContext)
+  const { loading, data } = useQuery(
+    gql`
+      query page($userId: String, $pageId: String) {
+        page(userId: $userId, pageId: $pageId) {
+          content
+          createdAt
+          lastUpdatedAt
+        }
+      }
+    `,
+    { variables: { userId, pageId } }
+  )
+
+  const content = data ? data.page.content : pageContext.content
 
   return (
     <Layout>
-      <SEO title="Markdown Landing Page" />
-      <Heading fontSize={[5, 6, 7]}>Markdown Landing Page</Heading>
-      <p>Write a landing page for anything</p>
+      <SEO title={pageName} />
+      <Heading fontSize={[5, 6, 7]}>{pageName}</Heading>
+      {content}
     </Layout>
   )
 }

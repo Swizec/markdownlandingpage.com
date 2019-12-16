@@ -1,4 +1,4 @@
-import { scanItems } from "./dynamodb";
+import { scanItems, getItem } from "./dynamodb";
 
 export const allPages = async () => {
     // TODO: add pagination because this table can get large
@@ -7,4 +7,20 @@ export const allPages = async () => {
     });
 
     return result.Items;
+};
+
+type PageParams = {
+    userId: string;
+    pageId: string;
+};
+
+export const page = async (_: any, params: PageParams) => {
+    const { userId, pageId } = params;
+
+    const result = await getItem({
+        TableName: process.env.PAGE_TABLE!,
+        Key: { userId, pageId }
+    });
+
+    return result.Item;
 };

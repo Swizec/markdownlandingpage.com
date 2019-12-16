@@ -4,6 +4,7 @@ import { Box, Button } from "rebass"
 import { Input } from "@rebass/forms"
 import { useMutation } from "react-apollo-hooks"
 import gql from "graphql-tag"
+import { Link } from "gatsby"
 
 const CreatePage = ({ userId }) => {
   const [pageName, setPageName] = useState()
@@ -31,9 +32,16 @@ const CreatePage = ({ userId }) => {
         value={pageName}
         onChange={ev => setPageName(ev.target.value)}
       />
-      <Button variant="primary" onClick={createPage} disabled={loading}>
-        Create new page
-      </Button>
+      {!data ? (
+        <Button variant="primary" onClick={createPage} disabled={loading}>
+          Create new page
+        </Button>
+      ) : null}
+      {data ? (
+        <Link to={`/${data.createPage.pageId}`}>
+          start writing your landing page
+        </Link>
+      ) : null}
     </Box>
   )
 }

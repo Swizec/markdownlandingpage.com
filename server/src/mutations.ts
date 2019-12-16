@@ -1,7 +1,13 @@
 import { getItem, updateItem } from "./dynamodb";
+import uuidv4 from "uuid/v4";
 
 type UserParams = {
     userId: string;
+};
+
+type CreatePageParams = {
+    userId: string;
+    pageName: string;
 };
 
 export const updateUser = async (_: any, params: UserParams): Promise<User> => {
@@ -54,4 +60,24 @@ export const updateUser = async (_: any, params: UserParams): Promise<User> => {
         createdAt: user ? user.createdAt : null,
         lastSignedInAt: user ? user.lastSignedInAt : null
     };
+};
+
+export const createPage = async (_: any, params: CreatePageParams) => {
+    const pageId = uuidv4();
+
+    const result = await updateItem({
+        TableName: process.env.PAGE_TABLE!,
+        Key: {
+            userId: params.userId,
+            pageId
+        },
+        UpdateExpression: "SET pageName = :pageName, createdAt = :createdAt",
+        ExpressionAttributeValues: {
+            ":pageName": params.pageName,
+            ":createdAt": new Date().toISOString()
+        },
+        ReturnValues: "ALL_NEW"
+    });
+
+    return result.Attributes;
 };

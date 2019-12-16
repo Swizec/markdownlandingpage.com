@@ -4,14 +4,14 @@ import Layout from "../components/layout"
 // import Image from "../components/image"
 import SEO from "../components/seo"
 import { useAuth } from "react-use-auth"
-import { Heading, Flex, Box } from "rebass"
+import { Heading, Flex, Box, Button } from "rebass"
 import { Textarea } from "@rebass/forms"
-import { useQuery } from "react-apollo-hooks"
+import { useQuery, useMutation } from "react-apollo-hooks"
 import gql from "graphql-tag"
 
 import useRemark from "../useRemark"
 
-function useContentFromServer({ userId, pageId, setPageContent }) {
+function useContentFromServer({ userId, pageId, pageContent, setPageContent }) {
   const { data } = useQuery(
     gql`
       query page($userId: String, $pageId: String) {
@@ -24,11 +24,33 @@ function useContentFromServer({ userId, pageId, setPageContent }) {
     `,
     { variables: { userId, pageId } }
   )
+
+  // TODO: handle errors
+  const [savePage] = useMutation(
+    gql`
+      query savePage($userId: String, $pageId: String, $content: String) {
+        page(userId: $userId, pageId: $pageId, content: $content) {
+          content
+          lastUpdatedAt
+        }
+      }
+    `,
+    {
+      variables: {
+        userId,
+        pageId,
+        content: pageContent,
+      },
+    }
+  )
+
   useEffect(() => {
     if (data) {
       setPageContent(data.page.content)
     }
   }, [data])
+
+  return savePage
 }
 
 const LandingPage = ({ pageContext }) => {
@@ -38,7 +60,12 @@ const LandingPage = ({ pageContext }) => {
   // initiate state with compile-time data
   const [pageContent, setPageContent] = useState(pageContext.content)
   // fetch fresh state from server on component mount
-  useContentFromServer({ userId, pageId, setPageContent })
+  const savePage = useContentFromServer({
+    userId,
+    pageId,
+    pageContent,
+    setPageContent,
+  })
 
   const renderedPage = useRemark(pageContent)
   const shouldBeEditable = isAuthenticated() && user.sub === userId
@@ -56,6 +83,9 @@ const LandingPage = ({ pageContext }) => {
                 value={pageContent}
                 onChange={ev => setPageContent(ev.target.value)}
               />
+              <Button variant="primary" onClick={savePage}>
+                Save
+              </Button>
             </Box>
             <Box width={1 / 2}>{renderedPage}</Box>
           </Flex>

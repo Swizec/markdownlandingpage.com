@@ -28,6 +28,7 @@ const schema = gql`
     type Mutation {
         updateUser(userId: String): User
         createPage(userId: String, pageName: String): LandingPage
+        savePage(userId: String, pageName: String, content: String): LandingPage
     }
 `;
 

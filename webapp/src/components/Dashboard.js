@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 import { useAuth } from "react-use-auth"
-import { Box, Button } from "rebass"
+import { Box, Button, Heading } from "rebass"
 import { Input } from "@rebass/forms"
 import { useMutation } from "react-apollo-hooks"
 import gql from "graphql-tag"
-import { Link } from "gatsby"
+import { Link, useStaticQuery, graphql } from "gatsby"
 
 const CreatePage = ({ userId }) => {
   const [pageName, setPageName] = useState()
@@ -51,6 +51,24 @@ const CreatePage = ({ userId }) => {
 export const Dashboard = () => {
   const { user, userId } = useAuth()
 
+  const data = useStaticQuery(graphql`
+    query {
+      mdlapi {
+        allPages {
+          userId
+          pageId
+          createdAt
+          pageName
+        }
+      }
+    }
+  `)
+
+  // TODO: this is insecure, we should filter on the server
+  const pages = data.mdlapi.allPages.filter(page => page.userId === userId)
+
+  console.log(pages)
+
   return (
     <Box m={[2, 3, 4]}>
       <p>
@@ -59,7 +77,14 @@ export const Dashboard = () => {
       </p>
       <CreatePage userId={userId} />
       <br />
-      List all pages here
+      <Heading>Edit your existing pages</Heading>
+      {pages.map(page => (
+        <Box>
+          <Link to={`/${page.pageId}`}>
+            {page.pageName} - {new Date(page.createdAt).toDateString()}
+          </Link>
+        </Box>
+      ))}
     </Box>
   )
 }

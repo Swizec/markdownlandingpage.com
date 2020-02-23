@@ -67,6 +67,23 @@ const LandingPage = ({ pageContext }) => {
     setPageContent,
   })
 
+  const deployPage = async () => {
+    // trigger stripe checkout
+    // run mutation on server to mark page as "deployed"
+    // tell user how to go there (popup or something)
+
+    const stripeSession = await fetch(
+      // TODO: use a config for this before going live
+      `https://cbvo4h8dge.execute-api.us-east-1.amazonaws.com/dev/createstripesession/${encodeURIComponent(
+        userId
+      )}/${encodeURIComponent(pageId)}?callback_domain=${
+        window.location.protocol
+      }//${window.location.hostname}`
+    ).then(res => res.json())
+
+    console.log(stripeSession)
+  }
+
   const renderedPage = useRemark(pageContent)
   const shouldBeEditable = isAuthenticated() && user.sub === userId
 
@@ -82,9 +99,13 @@ const LandingPage = ({ pageContext }) => {
               <Textarea
                 value={pageContent}
                 onChange={ev => setPageContent(ev.target.value)}
+                height="80%"
               />
               <Button variant="primary" onClick={savePage}>
                 Save
+              </Button>
+              <Button bg="highlight" ml={2} onClick={deployPage}>
+                Deploy
               </Button>
               <Text fontSize={2}>
                 Just share this URL with anyone, they only see the final page

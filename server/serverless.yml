@@ -39,6 +39,13 @@ functions:
                   path: graphql
                   method: POST
                   cors: true
+    createStripeSession:
+        handler: dist/createStripeSession.handler
+        events:
+            - http:
+                  path: createstripesession/{userId}/{pageId}
+                  method: GET
+                  cors: true
 
 resources:
     Resources:

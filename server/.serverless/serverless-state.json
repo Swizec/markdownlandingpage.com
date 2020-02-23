@@ -66,6 +66,12 @@
               "LogGroupName": "/aws/lambda/markdownlandingpage-dev-graphql"
             }
           },
+          "CreateStripeSessionLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/markdownlandingpage-dev-createStripeSession"
+            }
+          },
           "IamRoleLambdaExecution": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -155,7 +161,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/markdownlandingpage/dev/1582498457912-2020-02-23T22:54:17.912Z/markdownlandingpage.zip"
+                "S3Key": "serverless/markdownlandingpage/dev/1582501919870-2020-02-23T23:51:59.870Z/markdownlandingpage.zip"
               },
               "FunctionName": "markdownlandingpage-dev-graphql",
               "Handler": "dist/graphql.handler",
@@ -180,14 +186,56 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "GraphqlLambdaVersionxX64NZxa1MXjPE2WPJgPx3qvJspkX0dCn6PVt3aUJg8": {
+          "GraphqlLambdaVersionXxd9tMWecD48nngiwUPGEfhnq9zxf6IrDOTzecBtcA4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GraphqlLambdaFunction"
               },
-              "CodeSha256": "IRGl7BX4tUkYTrEpxTiJAVrgAAQC/86LpAqFx5mgJ1g="
+              "CodeSha256": "iyQ5+RmjxkyVAdHPWRrNeOEGQVNiegnBBwseldkE0co="
+            }
+          },
+          "CreateStripeSessionLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/markdownlandingpage/dev/1582501919870-2020-02-23T23:51:59.870Z/markdownlandingpage.zip"
+              },
+              "FunctionName": "markdownlandingpage-dev-createStripeSession",
+              "Handler": "dist/createStripeSession.handler",
+              "MemorySize": 1024,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs12.x",
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "USER_TABLE": "markdownlandingpage-users-dev",
+                  "PAGE_TABLE": "markdownlandingpage-pages-dev"
+                }
+              }
+            },
+            "DependsOn": [
+              "CreateStripeSessionLogGroup",
+              "IamRoleLambdaExecution"
+            ]
+          },
+          "CreateStripeSessionLambdaVersionM8YFBAvbhfNOCkb39ucMGWsAz107YoHUQtc6MM2o": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "CreateStripeSessionLambdaFunction"
+              },
+              "CodeSha256": "iyQ5+RmjxkyVAdHPWRrNeOEGQVNiegnBBwseldkE0co="
             }
           },
           "ApiGatewayRestApi": {
@@ -211,6 +259,45 @@
                 ]
               },
               "PathPart": "graphql",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceCreatestripesession": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "createstripesession",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceCreatestripesessionUseridVar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceCreatestripesession"
+              },
+              "PathPart": "{userId}",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceCreatestripesessionUseridVarPageidVar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceCreatestripesessionUseridVar"
+              },
+              "PathPart": "{pageId}",
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
@@ -257,6 +344,53 @@
               },
               "ResourceId": {
                 "Ref": "ApiGatewayResourceGraphql"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodCreatestripesessionUseridVarPageidVarOptions": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "AuthorizationType": "NONE",
+              "HttpMethod": "OPTIONS",
+              "MethodResponses": [
+                {
+                  "StatusCode": "200",
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Access-Control-Allow-Headers": true,
+                    "method.response.header.Access-Control-Allow-Methods": true,
+                    "method.response.header.Access-Control-Allow-Credentials": true
+                  },
+                  "ResponseModels": {}
+                }
+              ],
+              "RequestParameters": {},
+              "Integration": {
+                "Type": "MOCK",
+                "RequestTemplates": {
+                  "application/json": "{statusCode:200}"
+                },
+                "ContentHandling": "CONVERT_TO_TEXT",
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": "200",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'",
+                      "method.response.header.Access-Control-Allow-Credentials": "'false'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": "#set($origin = $input.params(\"Origin\"))\n#if($origin == \"\") #set($origin = $input.params(\"origin\")) #end\n#if($origin.matches(\".*\")) #set($context.responseOverride.header.Access-Control-Allow-Origin = $origin) #end"
+                    }
+                  }
+                ]
+              },
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceCreatestripesessionUseridVarPageidVar"
               },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
@@ -349,7 +483,50 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1582498449474": {
+          "ApiGatewayMethodCreatestripesessionUseridVarPageidVarGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceCreatestripesessionUseridVarPageidVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "CreateStripeSessionLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayDeployment1582501911702": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -359,8 +536,10 @@
             },
             "DependsOn": [
               "ApiGatewayMethodGraphqlOptions",
+              "ApiGatewayMethodCreatestripesessionUseridVarPageidVarOptions",
               "ApiGatewayMethodGraphqlGet",
-              "ApiGatewayMethodGraphqlPost"
+              "ApiGatewayMethodGraphqlPost",
+              "ApiGatewayMethodCreatestripesessionUseridVarPageidVarGet"
             ]
           },
           "GraphqlLambdaPermissionApiGateway": {
@@ -369,6 +548,43 @@
               "FunctionName": {
                 "Fn::GetAtt": [
                   "GraphqlLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "CreateStripeSessionLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "CreateStripeSessionLambdaFunction",
                   "Arn"
                 ]
               },
@@ -462,7 +678,13 @@
           "GraphqlLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GraphqlLambdaVersionxX64NZxa1MXjPE2WPJgPx3qvJspkX0dCn6PVt3aUJg8"
+              "Ref": "GraphqlLambdaVersionXxd9tMWecD48nngiwUPGEfhnq9zxf6IrDOTzecBtcA4"
+            }
+          },
+          "CreateStripeSessionLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "CreateStripeSessionLambdaVersionM8YFBAvbhfNOCkb39ucMGWsAz107YoHUQtc6MM2o"
             }
           },
           "ServiceEndpoint": {
@@ -583,6 +805,43 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {}
+      },
+      "createStripeSession": {
+        "handler": "dist/createStripeSession.handler",
+        "events": [
+          {
+            "http": {
+              "path": "createstripesession/{userId}/{pageId}",
+              "method": "get",
+              "cors": {
+                "origins": [
+                  "*"
+                ],
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "GET"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "markdownlandingpage-dev-createStripeSession",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {}
       }
     },
     "resources": {
@@ -647,7 +906,7 @@
     "artifact": "/Users/Swizec/Documents/random-coding/markdownlandingpage.com/server/.serverless/markdownlandingpage.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/markdownlandingpage/dev/1582498457912-2020-02-23T22:54:17.912Z",
+    "artifactDirectoryName": "serverless/markdownlandingpage/dev/1582501919870-2020-02-23T23:51:59.870Z",
     "artifact": "markdownlandingpage.zip"
   }
 }

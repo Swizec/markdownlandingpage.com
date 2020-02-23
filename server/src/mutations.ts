@@ -1,5 +1,6 @@
 import { getItem, updateItem } from "./dynamodb";
 import uuidv4 from "uuid/v4";
+import zeitAPI from "./zeitAPI";
 
 type UserParams = {
     userId: string;
@@ -84,6 +85,8 @@ export const createPage = async (_: any, params: CreatePageParams) => {
         },
         ReturnValues: "ALL_NEW"
     });
+
+    zeitAPI.deploy();
 
     return result.Attributes;
 };

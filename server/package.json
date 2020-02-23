@@ -12,6 +12,7 @@
     "dependencies": {
         "@types/aws-lambda": "^8.10.39",
         "@types/aws-sdk": "^2.7.0",
+        "@types/isomorphic-fetch": "^0.0.35",
         "@types/node-fetch": "^2.5.4",
         "@types/uuid": "^3.4.6",
         "apollo-server": "^2.9.13",
@@ -19,6 +20,7 @@
         "aws-lambda": "^0.1.2",
         "aws-sdk": "^2.590.0",
         "graphql": "^14.5.8",
+        "isomorphic-fetch": "^2.2.1",
         "uuid": "^3.3.3"
     }
 }

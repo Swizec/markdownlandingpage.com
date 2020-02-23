@@ -12,5 +12,5 @@ export async function deploy() {
         }
     ).then(res => res.json());
 
-    console.log(response);
+    console.log({ response });
 }

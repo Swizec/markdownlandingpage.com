@@ -87,7 +87,7 @@ export const createPage = async (_: any, params: CreatePageParams) => {
     });
 
     // updates static data in production
-    deploy();
+    await deploy();
 
     return result.Attributes;
 };
@@ -108,8 +108,10 @@ export const savePage = async (_: any, params: SavePageParams) => {
         ReturnValues: "ALL_NEW"
     });
 
+    console.log("deploying");
+
     // updates static data in production
-    deploy();
+    await deploy();
 
     return result.Attributes;
 };

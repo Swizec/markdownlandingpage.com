@@ -1,8 +1,8 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useAuth } from "react-use-auth"
 import { Box, Button, Heading } from "rebass"
 import { Input } from "@rebass/forms"
-import { useMutation } from "react-apollo-hooks"
+import { useMutation, useQuery } from "react-apollo-hooks"
 import gql from "graphql-tag"
 import { Link, useStaticQuery, graphql } from "gatsby"
 
@@ -46,12 +46,8 @@ const CreatePage = ({ userId }) => {
   )
 }
 
-// assuming this is only rendered when isAuthenticated() === true
-// so we don't have to check here
-export const Dashboard = () => {
-  const { user, userId } = useAuth()
-
-  const data = useStaticQuery(graphql`
+function useAllPages({ userId }) {
+  let data = useStaticQuery(graphql`
     query {
       mdlapi {
         allPages {
@@ -65,9 +61,38 @@ export const Dashboard = () => {
   `)
 
   // TODO: this is insecure, we should filter on the server
-  const pages = data.mdlapi.allPages.filter(page => page.userId === userId)
+  const [pageList, setPageList] = useState(
+    data.mdlapi.allPages.filter(page => page.userId === userId)
+  )
 
-  console.log(pages)
+  const liveQuery = useQuery(gql`
+    query {
+      allPages {
+        userId
+        pageId
+        createdAt
+        pageName
+      }
+    }
+  `)
+
+  useEffect(() => {
+    // if data loaded successfully
+    if (liveQuery.data) {
+      setPageList(
+        liveQuery.data.allPages.filter(page => page.userId === userId)
+      )
+    }
+  }, [liveQuery.data])
+
+  return pageList
+}
+
+// assuming this is only rendered when isAuthenticated() === true
+// so we don't have to check here
+export const Dashboard = () => {
+  const { user, userId } = useAuth()
+  const pageList = useAllPages({ userId })
 
   return (
     <Box m={[2, 3, 4]}>
@@ -78,7 +103,7 @@ export const Dashboard = () => {
       <CreatePage userId={userId} />
       <br />
       <Heading>Edit your existing pages</Heading>
-      {pages.map(page => (
+      {pageList.map(page => (
         <Box>
           <Link to={`/${page.pageId}`}>
             {page.pageName} - {new Date(page.createdAt).toDateString()}

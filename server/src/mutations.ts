@@ -1,6 +1,6 @@
 import { getItem, updateItem } from "./dynamodb";
 import uuidv4 from "uuid/v4";
-import zeitAPI from "./zeitAPI";
+import { deploy } from "./zeitAPI";
 
 type UserParams = {
     userId: string;
@@ -86,14 +86,13 @@ export const createPage = async (_: any, params: CreatePageParams) => {
         ReturnValues: "ALL_NEW"
     });
 
-    zeitAPI.deploy();
+    // updates static data in production
+    deploy();
 
     return result.Attributes;
 };
 
 export const savePage = async (_: any, params: SavePageParams) => {
-    console.log(params);
-
     const result = await updateItem({
         TableName: process.env.PAGE_TABLE!,
         Key: {
@@ -108,6 +107,9 @@ export const savePage = async (_: any, params: SavePageParams) => {
         },
         ReturnValues: "ALL_NEW"
     });
+
+    // updates static data in production
+    deploy();
 
     return result.Attributes;
 };

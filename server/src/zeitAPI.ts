@@ -1,33 +1,16 @@
 import fetch from "isomorphic-fetch";
 
-const BASE_URL = "https://api.zeit.co";
-
 export async function deploy() {
-    // make API request to ZEIT
-    // using their deployment api
-    // https://zeit.co/docs/api#endpoints/deployments
+    // POST to our deploy hook
+    // runs a new deployment on Zeit
 
-    // ignoring rate limits for now
-    const response = await fetch(`${BASE_URL}/v12/now/deployments`, {
-        headers: {
-            "Content-Type": "application/json",
-            // TODO: must use secrets management for this to be safe
-            Authorization: "Bearer VhlDaoiMSLGzLt3ANoJKAK4S"
-        },
-        method: "POST",
-        body: JSON.stringify({
-            name: "my-test-deployment",
-            files: [
-                {
-                    file: "index.html",
-                    data: `<!doctype html><html><title>hello</title><body>hello world</body></html>`
-                }
-            ],
-            projectSettings: {
-                framework: null
-            }
-        })
-    }).then(res => res.json());
+    // TODO: use secrets manager for this for better security
+    const response = await fetch(
+        `https://api.zeit.co/v1/integrations/deploy/QmcTEQwxxshMcaJRYd39FJZiiAsi7Ph4FrpPFMbNoBTezM/peO52u2kmj`,
+        {
+            method: "POST"
+        }
+    ).then(res => res.json());
 
     console.log(response);
 }

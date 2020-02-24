@@ -53,6 +53,30 @@ function useContentFromServer({ userId, pageId, pageContent, setPageContent }) {
   return savePage
 }
 
+function usePurchaseParams() {
+  if (typeof window !== "undefined") {
+    const query = new URLSearchParams(window.location.search)
+
+    if (query.get("session_id")) {
+      // TODO: check against server
+      return true
+    }
+  }
+
+  return false
+}
+
+const PurchaseSuccess = ({ pageId }) => {
+  return (
+    <Box mt={0} mb={20}>
+      <Heading sx={{ textAlign: "center" }}>
+        Thank you for your purchase. Your page is live at
+        http://markdownlandingpage.com/{pageId}
+      </Heading>
+    </Box>
+  )
+}
+
 const LandingPage = ({ pageContext }) => {
   const { pageName, pageId, userId } = pageContext
   const { isAuthenticated, user } = useAuth()
@@ -92,13 +116,17 @@ const LandingPage = ({ pageContext }) => {
   const renderedPage = useRemark(pageContent)
   const shouldBeEditable = isAuthenticated() && user.sub === userId
 
+  const returnedFromPurchase = usePurchaseParams()
+
   return (
     <Layout>
       <SEO title={pageName} />
+      {returnedFromPurchase ? <PurchaseSuccess pageId={pageId} /> : null}
 
       {shouldBeEditable ? (
         <>
           <Heading fontSize={[5, 6, 7]}>{pageName}</Heading>
+
           <Flex>
             <Box width={1 / 2}>
               <Textarea

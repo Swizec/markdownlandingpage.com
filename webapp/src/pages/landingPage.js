@@ -81,7 +81,12 @@ const LandingPage = ({ pageContext }) => {
       }//${window.location.hostname}`
     ).then(res => res.json())
 
-    console.log(stripeSession)
+    const stripe = window.Stripe("pk_5WyhDiasKtEhmWiYGeGLvHRqm5Fcn")
+    stripe
+      .redirectToCheckout({
+        sessionId: stripeSession.id,
+      })
+      .then(console.log)
   }
 
   const renderedPage = useRemark(pageContent)

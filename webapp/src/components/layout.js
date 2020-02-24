@@ -8,7 +8,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
-import { Box, Header, Button } from 'rebass'
+import { Box, Header, Button } from "rebass"
 
 // import Header from "./header"
 import "./layout.css"
@@ -27,7 +27,7 @@ const Layout = ({ children }) => {
   return (
     <>
       {/* <Header siteTitle={data.site.siteMetadata.title} /> */}
-    <Box m={[3, 4, 5]} mt={[2, 3, 4]}>
+      <Box m={[3, 4, 5]} mt={[2, 3, 4]}>
         <main>{children}</main>
         <footer>
           © {new Date().getFullYear()}, Built with

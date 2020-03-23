@@ -7,7 +7,7 @@
     "license": "MIT",
     "scripts": {
         "build": "tsc",
-        "deploy": "npm run build && serverless deploy"
+        "deploy": "sh deploy.sh"
     },
     "dependencies": {
         "@types/aws-lambda": "^8.10.39",
@@ -21,6 +21,7 @@
         "aws-sdk": "^2.590.0",
         "graphql": "^14.5.8",
         "isomorphic-fetch": "^2.2.1",
+        "serverless-dotenv-plugin": "^2.3.2",
         "stripe": "^8.20.0",
         "uuid": "^3.3.3"
     }

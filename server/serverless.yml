@@ -3,7 +3,7 @@ service: markdownlandingpage
 provider:
     name: aws
     runtime: nodejs12.x
-    stage: dev
+    stage: ${opt:stage}
     environment:
         USER_TABLE: ${self:service}-users-${self:provider.stage}
         PAGE_TABLE: ${self:service}-pages-${self:provider.stage}

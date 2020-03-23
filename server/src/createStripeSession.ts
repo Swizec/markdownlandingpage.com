@@ -21,7 +21,7 @@ export const handler = async (event: APIGatewayEvent): Promise<APIResponse> => {
     // following docs here: https://stripe.com/docs/payments/checkout/one-time
 
     // TODO: use secrets manager for secret key
-    const stripe = stripeLib("kvBqgq7OCZs9e730tl9nEbG1I2JDfjWo");
+    const stripe = stripeLib(process.env.STRIPE_KEY!);
 
     const userId = event.pathParameters
         ? decodeURIComponent(event.pathParameters.userId)

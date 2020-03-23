@@ -1,15 +1,18 @@
 const activeEnv =
   process.env.GATSBY_ACTIVE_ENV || process.env.NODE_ENV || "development"
 
-require("dotenv").config({
-  path: `.env.${activeEnv}`,
-})
+const config = require(`./config.${activeEnv}.json`)
 
 module.exports = {
   siteMetadata: {
     title: `Markdown Landing Page`,
     description: `Write a landing page for anything.`,
     author: `@swizec`,
+    mdlConfig: {
+      mdl_graphql_url: config.MDL_GRAPHQL_URL,
+      create_stripe_session_url: config.CREATE_STRIPE_SESSION_URL,
+      stripe_key: config.STRIPE_KEY,
+    },
   },
   plugins: [
     "gatsby-plugin-theme-ui",
@@ -18,7 +21,7 @@ module.exports = {
       options: {
         typeName: "MDLAPI",
         fieldName: "mdlapi",
-        url: process.env.MDL_GRAPHQL_URL,
+        url: config.MDL_GRAPHQL_URL,
       },
     },
     `gatsby-plugin-react-helmet`,

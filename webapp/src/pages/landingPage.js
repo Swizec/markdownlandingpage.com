@@ -8,6 +8,7 @@ import { Heading, Flex, Box, Button, Text } from "rebass"
 import { Textarea } from "@rebass/forms"
 import { useQuery, useMutation } from "react-apollo-hooks"
 import gql from "graphql-tag"
+import { useStaticQuery } from "gatsby"
 
 import useRemark from "../useRemark"
 
@@ -81,6 +82,21 @@ const LandingPage = ({ pageContext }) => {
   const { pageName, pageId, userId } = pageContext
   const { isAuthenticated, user } = useAuth()
 
+  const { site } = useStaticQuery(
+    graphql`
+      query {
+        site {
+          siteMetadata {
+            mdlConfig {
+              create_stripe_session_url
+              stripe_key
+            }
+          }
+        }
+      }
+    `
+  )
+
   // initiate state with compile-time data
   const [pageContent, setPageContent] = useState(pageContext.content)
   // fetch fresh state from server on component mount
@@ -98,14 +114,16 @@ const LandingPage = ({ pageContext }) => {
 
     const stripeSession = await fetch(
       // TODO: use a config for this before going live
-      `${process.env.CREATE_STRIPE_SESSION_URL}${encodeURIComponent(
-        userId
-      )}/${encodeURIComponent(pageId)}?callback_domain=${
-        window.location.protocol
-      }//${window.location.hostname}`
+      `${
+        site.siteMetadata.mdlConfig.create_stripe_session_url
+      }${encodeURIComponent(userId)}/${encodeURIComponent(
+        pageId
+      )}?callback_domain=${window.location.protocol}//${
+        window.location.hostname
+      }`
     ).then(res => res.json())
 
-    const stripe = window.Stripe(process.env.STRIPE_KEY)
+    const stripe = window.Stripe(site.siteMetadata.mdlConfig.stripe_key)
     stripe
       .redirectToCheckout({
         sessionId: stripeSession.id,

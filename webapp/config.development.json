@@ -1,0 +1,5 @@
+{
+  "MDL_GRAPHQL_URL": "https://cbvo4h8dge.execute-api.us-east-1.amazonaws.com/dev/graphql",
+  "CREATE_STRIPE_SESSION_URL": "https://cbvo4h8dge.execute-api.us-east-1.amazonaws.com/dev/createstripesession/",
+  "STRIPE_KEY": "pk_5WyhDiasKtEhmWiYGeGLvHRqm5Fcn"
+}

@@ -1,0 +1,9 @@
+{
+    "build": {
+        "env": {
+            "MDL_GRAPHQL_URL": "@mdl_graphql_url",
+            "CREATE_STRIPE_SESSION_URL": "@create_stripe_session_url",
+            "STRIPE_KEY": "@stripe_key"
+        }
+    }
+}

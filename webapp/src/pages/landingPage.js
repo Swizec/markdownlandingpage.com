@@ -98,14 +98,14 @@ const LandingPage = ({ pageContext }) => {
 
     const stripeSession = await fetch(
       // TODO: use a config for this before going live
-      `https://cbvo4h8dge.execute-api.us-east-1.amazonaws.com/dev/createstripesession/${encodeURIComponent(
+      `${process.env.CREATE_STRIPE_SESSION_URL}${encodeURIComponent(
         userId
       )}/${encodeURIComponent(pageId)}?callback_domain=${
         window.location.protocol
       }//${window.location.hostname}`
     ).then(res => res.json())
 
-    const stripe = window.Stripe("pk_5WyhDiasKtEhmWiYGeGLvHRqm5Fcn")
+    const stripe = window.Stripe(process.env.STRIPE_KEY)
     stripe
       .redirectToCheckout({
         sessionId: stripeSession.id,

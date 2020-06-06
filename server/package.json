@@ -16,7 +16,7 @@
         "@types/node-fetch": "^2.5.4",
         "@types/uuid": "^3.4.6",
         "apollo-server": "^2.9.13",
-        "apollo-server-lambda": "^2.9.13",
+        "apollo-server-lambda": "^2.14.2",
         "aws-lambda": "^0.1.2",
         "aws-sdk": "^2.590.0",
         "graphql": "^14.5.8",

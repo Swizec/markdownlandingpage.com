@@ -18,7 +18,7 @@
         "apollo-server": "^2.9.13",
         "apollo-server-lambda": "^2.9.13",
         "aws-lambda": "^0.1.2",
-        "aws-sdk": "^2.590.0",
+        "aws-sdk": "^2.814.0",
         "graphql": "^14.5.8",
         "isomorphic-fetch": "^2.2.1",
         "serverless-dotenv-plugin": "^2.3.2",
